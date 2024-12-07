@@ -1,4 +1,5 @@
-FROM ubuntu:24.10@sha256:102bc1874fdb136fc2d218473f03cf84135cb7496fefdb9c026c0f553cfe1b6d
+#FROM ubuntu:24.10@sha256:102bc1874fdb136fc2d218473f03cf84135cb7496fefdb9c026c0f553cfe1b6d
+FROM ubuntu:24.10@sha256:bd6cd2105f1edfc46ba5f27bd32837e4ba0ed342c565fc4b1ba49b1573f23ca6
 
 LABEL version="24.10"
 LABEL release_date="20241207"
