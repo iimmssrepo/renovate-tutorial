@@ -15,7 +15,6 @@
       "datasourceTemplate": "simple",
       "versioningTemplate": "regex:^\\d{8}$",
       "extractVersionTemplate": "{{#currentValue}}{{currentValue}}{{/currentValue}}",
-      "updateStrategy": "bump",
       "depNameTemplate": "Dockerfile release_date"
     }
   ],
@@ -23,11 +22,9 @@
     {
       "matchPackageNames": ["Dockerfile release_date"],
       "versioning": "regex:^\\d{8}$",
-      "bumpVersion": "currentDate",
-      "customValueOptions": {
-        "currentDate": "{{date 'YYYYMMDD'}}"
-      }
+      "bumpVersion": "currentDate"
     }
   ]
 }
+
 
