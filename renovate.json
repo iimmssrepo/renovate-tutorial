@@ -3,30 +3,14 @@
   "extends": [
     "config:best-practices"
   ],
-  "packageRules": [
-    {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "ubuntu"
-      ],
-      "versioning": "docker"
-    }
-  ],
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        "^Dockerfile$"
-      ],
+      "description": "Update _VERSION variables in Dockerfiles"
+      "fileMatch": ["(^|/|\\.)Dockerfile$", "(^|/)Dockerfile\\.[^/]*$"],
       "matchStrings": [
-        "LABEL version=\"(?<currentValue>\\d+\\.\\d+)\""
-      ],
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker",
-      "extractVersionTemplate": "{{{currentValue}}}",
-      "depNameTemplate": "ubuntu"
+        "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)\\s"
+      ]
     }
   ]
 }
