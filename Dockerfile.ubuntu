@@ -1,0 +1,10 @@
+FROM ubuntu:24.10
+
+LABEL version="24.10"
+LABEL release_date="20241207"
+
+RUN apt-get update && apt-get install -y \
+    curl \
+    vim
+    
+CMD ["/bin/bash"]
