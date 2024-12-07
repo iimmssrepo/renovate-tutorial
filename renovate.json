@@ -3,6 +3,7 @@
   "extends": [
     "config:best-practices"
   ],
+  "allowedPostUpgradeCommands": ["sed"],
   "postUpgradeTasks": {
     "commands": [
       "sed -i '/LABEL release_date/c\\LABEL release_date=\"$(date +%Y%m%d)\"' Dockerfile"
@@ -10,3 +11,4 @@
     "fileFilters": ["Dockerfile"]
   }
 }
+
