@@ -1,8 +1,8 @@
 # Specify version via build argument
-ARG UBUNTU_VERSION=16.04
+ARG UBUNTU_VERSION=24.04
 
 # Use the specified version with the correct SHA256 digest
-FROM ubuntu:${UBUNTU_VERSION}@sha256:a3785f78ab8547ae2710c89e627783cfa7ee7824d3468cae6835c9f4eae23ff7
+FROM ubuntu:${UBUNTU_VERSION}@sha256:80dd3c3b9c6cecb9f1667e9290b3bc61b78c2678c02cbdae5f0fea92cc6734ab
 
 # Set labels
 LABEL version=${UBUNTU_VERSION}
