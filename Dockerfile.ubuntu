@@ -1,7 +1,6 @@
-ARG TAG=16.04
-FROM ubuntu:${TAG}@sha256:a3785f78ab8547ae2710c89e627783cfa7ee7824d3468cae6835c9f4eae23ff7
+FROM ubuntu:16.04@sha256:a3785f78ab8547ae2710c89e627783cfa7ee7824d3468cae6835c9f4eae23ff7
 
-LABEL version="${TAG}"
+LABEL version="16.04"
 LABEL release_date="20240801"
 
 RUN apt-get update && apt-get install -y \
