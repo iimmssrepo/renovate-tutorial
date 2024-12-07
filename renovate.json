@@ -2,5 +2,18 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:best-practices"
+  ],
+  "customManagers": [
+    {
+      "fileMatch": ["^Dockerfile$"],
+      "matchStrings": [
+        "LABEL release_date=\"(?<currentValue>.*)\""
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "regex:^\\d{8}$",
+      "extractVersionTemplate": "{{#currentValue}}release_date:{{currentValue}}{{/currentValue}}",
+      "replaceStringTemplate": "LABEL release_date=\"{{newVersion}}\""
+    }
   ]
 }
+
