@@ -5,7 +5,10 @@
   ],
   "customManagers": [
     {
-      "fileMatch": ["^Dockerfile$"],
+      "customType": "regex",
+      "fileMatch": [
+        "^Dockerfile$"
+      ],
       "matchStrings": [
         "LABEL release_date=\"(?<currentValue>.*)\""
       ],
@@ -16,5 +19,3 @@
     }
   ]
 }
-
-
