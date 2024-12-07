@@ -3,26 +3,25 @@
   "extends": [
     "config:best-practices"
   ],
-  "customManagers": [
-    {
-      "customType": "regex",
-      "fileMatch": [
-        "^Dockerfile$"
-      ],
-      "matchStrings": [
-        "LABEL release_date=\"(?<currentValue>\\d{8})\""
-      ],
-      "datasourceTemplate": "simple",
-      "versioningTemplate": "regex:^\\d{8}$",
-      "extractVersionTemplate": "{{#currentValue}}{{currentValue}}{{/currentValue}}",
-      "depNameTemplate": "Dockerfile release_date"
-    }
-  ],
   "packageRules": [
     {
-      "matchPackageNames": ["Dockerfile release_date"],
-      "versioning": "regex:^\\d{8}$",
-      "bumpVersion": "currentDate"
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ubuntu"],
+      "versioning": "docker"
+    }
+  ],
+  "customManagers": [
+    {
+      "fileMatch": ["^Dockerfile$"],
+      "matchStrings": [
+        "LABEL version=\"(?<currentValue>\\d+\\.\\d+)\"",
+        "LABEL release_date=\"(?<currentValue>\\d{8})\""
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker",
+      "extractVersionTemplate": "{{{currentValue}}}",
+      "depNameTemplate": "ubuntu",
+      "replaceStringTemplate": "LABEL version=\"{{{newVersion}}}\""
     }
   ]
 }
