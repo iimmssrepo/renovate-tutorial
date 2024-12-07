@@ -5,14 +5,21 @@
   ],
   "packageRules": [
     {
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["ubuntu"],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ubuntu"
+      ],
       "versioning": "docker"
     }
   ],
   "customManagers": [
     {
-      "fileMatch": ["^Dockerfile$"],
+      "customType": "regex",
+      "fileMatch": [
+        "^Dockerfile$"
+      ],
       "matchStrings": [
         "LABEL version=\"(?<currentValue>\\d+\\.\\d+)\""
       ],
@@ -23,6 +30,3 @@
     }
   ]
 }
-
-
-
