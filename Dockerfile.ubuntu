@@ -1,13 +1,18 @@
-# renovate: datasource=docker packageName=ubuntu versioning=docker
-ENV UBUNTU_VERSION=16.04
+# Specify version via build argument
+ARG UBUNTU_VERSION=16.04
 
+# Use the specified version with the correct SHA256 digest
 FROM ubuntu:${UBUNTU_VERSION}@sha256:a3785f78ab8547ae2710c89e627783cfa7ee7824d3468cae6835c9f4eae23ff7
 
-LABEL version="${UBUNTU_VERSION}"
+# Set labels
+LABEL version=${UBUNTU_VERSION}
 LABEL release_date="20240801"
 
+# Install packages
 RUN apt-get update && apt-get install -y \
     curl \
-    vim
-    
+    vim \
+  && apt-get clean
+
+# Default command
 CMD ["/bin/bash"]
