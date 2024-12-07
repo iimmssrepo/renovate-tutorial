@@ -14,16 +14,15 @@
     {
       "fileMatch": ["^Dockerfile$"],
       "matchStrings": [
-        "LABEL version=\"(?<currentValue>\\d+\\.\\d+)\"",
-        "LABEL release_date=\"(?<currentValue>\\d{8})\""
+        "LABEL version=\"(?<currentValue>\\d+\\.\\d+)\""
       ],
       "datasourceTemplate": "docker",
       "versioningTemplate": "docker",
       "extractVersionTemplate": "{{{currentValue}}}",
-      "depNameTemplate": "ubuntu",
-      "replaceStringTemplate": "LABEL version=\"{{{newVersion}}}\""
+      "depNameTemplate": "ubuntu"
     }
   ]
 }
+
 
 
