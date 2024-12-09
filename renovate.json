@@ -16,7 +16,6 @@
   "postUpgradeTasks": {
     "commands": [
       "./renovate-post-upgrade-tasks.sh"
-    ],
-    "fileFilters": ["Dockerfile"]
+    ]
   }
 }
