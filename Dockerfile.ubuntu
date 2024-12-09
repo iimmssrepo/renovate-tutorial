@@ -2,17 +2,22 @@
 ARG UBUNTU_VERSION=16.04
 
 # Use the specified version with the correct SHA256 digest
-FROM ubuntu:${UBUNTU_VERSION}@sha256:a3785f78ab8547ae2710c89e627783cfa7ee7824d3468cae6835c9f4eae23ff7
+FROM ubuntu:${UBUNTU_VERSION}@sha256:a3785f78ab8547ae2710c89e627783cfa7ee7824d3468cae6835c9f4eae23ff7 AS production
 
-# Set labels
-LABEL version=${UBUNTU_VERSION}
-LABEL release_date="20240801"
+# labels
+LABEL mantainer="Iñigo Montesino Vilches"
+LABEL description="Base image for base images for products"
+LABEL app="Only OS"
+LABEL company="sngular"
+LABEL os="ubuntu"
+LABEL os_version=${UBUNTU_VERSION}
+LABEL os_upgrade_date="20241122"
 
-# Install packages
-RUN apt-get update && apt-get install -y \
-    curl \
-    vim \
-  && apt-get clean
+RUN apt-get update \
+        && useradd -p '*' -c '' -s /bin/false sngular
 
-# Default command
-CMD ["/bin/bash"]
+# use sngular user
+USER sngular
+
+HEALTHCHECK NONE
+
