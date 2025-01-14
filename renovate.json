@@ -1,16 +1,25 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:best-practices"
-  ],
+  "packageRules": [{"matchCategories": ["docker"], "versioning": "semver"}],
+  "enabledManagers": ["dockerfile", "custom.regex"],
+  "extends": ["config:best-practices"],
+  "automerge": false,
+  "platformAutomerge": false,
+  "labels": ["update/renovate"],
+  "prHourlyLimit": 5,
   "customManagers": [
     {
       "customType": "regex",
-      "description": "Update _VERSION variables in Dockerfiles",
-      "fileMatch": ["(^|/|\\.)Dockerfile$", "(^|/)Dockerfile\\.[^/]*$"],
+      "fileMatch": ["^Dockerfile$"],
+      "matchStringsStrategy": "any",
       "matchStrings": [
-        "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)\\s"
-      ]
+        "ARG PYTHON_VERSION=\"?(?<currentValue>3\\.(?<minor>\\d{1,2}))\"?\\s"
+      ],
+      "autoReplaceStringTemplate": "ARG PYTHON_VERSION=3.{{{minor}}}\n",
+      "currentValueTemplate": "3.{{{minor}}}",
+      "datasourceTemplate": "python-version",
+      "versioningTemplate": "python",
+      "depNameTemplate": "python"
     }
   ],
   "postUpgradeTasks": {
