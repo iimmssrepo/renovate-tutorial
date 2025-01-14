@@ -14,7 +14,7 @@
       "depNameTemplate": "taers232c/GAMADV-XTD3",
       "matchStrings": ["ENV GAMADV_XTD3=(?<currentValue>.*?)\\n"],
       "datasourceTemplate": "github-releases",
-      "versioningTemplate": "semver-coerced"
+      "versioningTemplate": "loose"
     }
   ],
   "postUpgradeTasks": {
