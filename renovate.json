@@ -11,15 +11,12 @@
     {
       "customType": "regex",
       "fileMatch": ["^Dockerfile$"],
-      "matchStringsStrategy": "any",
-      "matchStrings": [
-        "ARG PYTHON_VERSION=\"?(?<currentValue>3\\.\\d{1,2})\"?\\s"
-      ],
-      "autoReplaceStringTemplate": "ARG PYTHON_VERSION={{{newValue}}}\n",
-      "currentValueTemplate": "{{{currentValue}}}",
-      "datasourceTemplate": "python-version",
-      "versioningTemplate": "python",
-      "depNameTemplate": "python"
+      "matchStrings": ["ENV GAMADV_XTD3=(?<currentValue>.*?)\\n"]
     }
-  ]
+  ],
+  "postUpgradeTasks": {
+    "commands": [
+      "./renovate-post-upgrade-tasks.sh"
+    ]
+  }
 }
