@@ -13,18 +13,13 @@
       "fileMatch": ["^Dockerfile$"],
       "matchStringsStrategy": "any",
       "matchStrings": [
-        "ARG PYTHON_VERSION=\"?(?<currentValue>3\\.(?<minor>\\d{1,2}))\"?\\s"
+        "ARG PYTHON_VERSION=\"?(?<currentValue>3\\.\\d{1,2})\"?\\s"
       ],
-      "autoReplaceStringTemplate": "ARG PYTHON_VERSION=3.{{{minor}}}\n",
-      "currentValueTemplate": "3.{{{minor}}}",
+      "autoReplaceStringTemplate": "ARG PYTHON_VERSION={{{newValue}}}\n",
+      "currentValueTemplate": "{{{currentValue}}}",
       "datasourceTemplate": "python-version",
       "versioningTemplate": "python",
       "depNameTemplate": "python"
     }
-  ],
-  "postUpgradeTasks": {
-    "commands": [
-      "./renovate-post-upgrade-tasks.sh"
-    ]
-  }
+  ]
 }
