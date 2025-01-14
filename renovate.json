@@ -11,6 +11,7 @@
     {
       "customType": "regex",
       "fileMatch": ["^Dockerfile$"],
+      "datasourceTemplate": "github-releases",
       "matchStrings": ["ENV GAMADV_XTD3=(?<currentValue>.*?)\\n"]
     }
   ],
