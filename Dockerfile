@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu@sha256:80dd3c3b9c6cecb9f1667e9290b3bc61b78c2678c02cbdae5f0fea92cc6734ab
 
 # renovate: datasource=github-releases depName=taers232c/GAMADV-XTD3 versioning=loose
 ENV GAMADV_XTD3=7.00.38
