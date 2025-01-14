@@ -11,9 +11,10 @@
     {
       "customType": "regex",
       "fileMatch": ["^Dockerfile$"],
-      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "taers232c/GAMADV-XTD3",
       "matchStrings": ["ENV GAMADV_XTD3=(?<currentValue>.*?)\\n"],
-      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "semver-coerced"
     }
   ],
   "postUpgradeTasks": {
