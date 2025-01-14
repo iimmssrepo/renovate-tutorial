@@ -6,7 +6,7 @@ LABEL python_version="3.11"
 # Disable Prompt During Package Installation
 ARG DEBIAN_FRONTEND=noninteractive
 
-ARG PYTHON_VERSION=3.11
+ARG PYTHON_VERSION=3.13
 
 USER root
 
