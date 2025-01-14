@@ -12,7 +12,8 @@
       "customType": "regex",
       "fileMatch": ["^Dockerfile$"],
       "datasourceTemplate": "github-releases",
-      "matchStrings": ["ENV GAMADV_XTD3=(?<currentValue>.*?)\\n"]
+      "matchStrings": ["ENV GAMADV_XTD3=(?<currentValue>.*?)\\n"],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
   ],
   "postUpgradeTasks": {
