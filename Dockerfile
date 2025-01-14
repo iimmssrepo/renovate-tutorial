@@ -1,5 +1,6 @@
 FROM ubuntu
 
+# renovate: datasource=github-releases depName=taers232c/GAMADV-XTD3 versioning=loose
 ENV GAMADV_XTD3=7.00.38
 ENV GAM_URL=https://raw.githubusercontent.com/taers232c/GAMADV-XTD3/refs/tags/v${GAMADV_XTD3}/src/requirements.txt
 ENV GAMADV_URL=https://github.com/taers232c/GAMADV-XTD3/releases/download/v${GAMADV_XTD3}/gamadv-xtd3-${GAMADV_XTD3}-linux-x86_64-glibc2.39.tar.xz
