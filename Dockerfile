@@ -10,7 +10,7 @@ LABEL openresty_version.label="1.25.3.2"
 # # For example: "-debug" or "-valgrind"
 ARG resty_deb_flavor=""
 # renovate: datasource=github-releases depName=openresty/openresty versioning=loose
-ARG resty_deb_version="1.25.3.0"
+ARG resty_deb_version="v1.25.3.0"
 ARG resty_image_base="ubuntu"
 ARG resty_image_tag="noble"
 
