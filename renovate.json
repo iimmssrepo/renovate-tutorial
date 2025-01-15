@@ -7,8 +7,7 @@
     {
     "matchDatasources": ["github-releases"],
     "matchPackageNames": ["openresty/openresty"],
-    "extractVersion": "^v(?<version>\\d+\\.\\d+\\.\\d+(\\.\\d+)?)$",
-    "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(\\.(?<build>\\d+))?$"
+    "extractVersion": "^v(?<version>.*)$"
     }
   ],
   "enabledManagers": ["dockerfile", "custom.regex"],
