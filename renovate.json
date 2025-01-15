@@ -1,6 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "packageRules": [{"matchCategories": ["docker"], "versioning": "semver"}],
+  "packageRules": [{
+    "matchCategories": ["docker"], 
+    "versioning": "semver",
+    "extractVersion": "^(?:v)?(?<version>.*)$"
+    }
+  ],
   "enabledManagers": ["dockerfile", "custom.regex"],
   "extends": ["config:best-practices"],
   "automerge": false,
