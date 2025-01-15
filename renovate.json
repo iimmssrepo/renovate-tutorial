@@ -3,6 +3,11 @@
   "packageRules": [{
     "matchCategories": ["docker"], 
     "versioning": "semver"
+    },
+    {
+    "matchDatasources": ["github-releases"],
+    "matchPackageNames": ["openresty/openresty"],
+    "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)?$"
     }
   ],
   "enabledManagers": ["dockerfile", "custom.regex"],
