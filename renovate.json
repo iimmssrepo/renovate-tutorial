@@ -11,15 +11,10 @@
     {
       "customType": "regex",
       "fileMatch": ["^Dockerfile$"],
-      "depNameTemplate": "taers232c/GAMADV-XTD3",
-      "matchStrings": ["ENV GAMADV_XTD3=(?<currentValue>.*?)\\n"],
-      "datasourceTemplate": "github-releases",
-      "versioningTemplate": "loose"
+      "matchStrings": [
+        "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sARG .*?_version=\"(?<currentValue>.*)\"\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
-  ],
-  "postUpgradeTasks": {
-    "commands": [
-      "./renovate-post-upgrade-tasks.sh"
-    ]
-  }
+  ]
 }
