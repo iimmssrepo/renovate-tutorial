@@ -1,11 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "packageRules": [
-    {
-      "matchCategories": ["docker"],
-      "versioning": "semver"
-    }
-  ],
+  "packageRules": [{"matchCategories": ["docker"], "versioning": "semver"}],
   "enabledManagers": ["dockerfile", "custom.regex"],
   "extends": ["config:best-practices"],
   "automerge": false,
@@ -20,7 +15,7 @@
         "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sARG .*?_version=\"(?<currentValue>.*)\"\\s"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
-      "extractVersion": "^(?:v)?(?<version>.*)$"
+      "autoReplaceStringTemplate": "{{#if version}}{{{version}}}{{/if}}"
     }
   ]
 }
