@@ -3,7 +3,7 @@ FROM ubuntu@sha256:80dd3c3b9c6cecb9f1667e9290b3bc61b78c2678c02cbdae5f0fea92cc673
 #labels
 LABEL description="Base image for openresty based products"
 LABEL app="openresty server"
-LABEL openresty_version.label="1.25.3.2"
+LABEL openresty_version.label="1.25.3.2-1~noble1"
 
 # # resty_deb_flavor build argument is used to select other
 # # OpenResty Debian package variants.
