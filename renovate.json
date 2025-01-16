@@ -22,7 +22,7 @@
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
       "registryUrlTemplate": "https://openresty.org/package/ubuntu?{{#if release }}release={{release}}{{else}}suite=noble{{/if}}&components=main&binaryArch=amd64",
       "datasourceTemplate": "deb"
-    },
+    }
   ]
 }
 
