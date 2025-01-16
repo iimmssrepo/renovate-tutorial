@@ -4,9 +4,7 @@
     {
       "matchCategories": ["docker"], 
       "versioning": "semver"
-    }
-  ],
-  "packageRules": [
+    },
     {
       "matchPackageNames": ["openresty/openresty"],
       "extractVersion": "^v(?<version>.*)$"
