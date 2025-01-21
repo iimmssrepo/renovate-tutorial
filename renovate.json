@@ -1,6 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "packageRules": [{"matchCategories": ["docker"], "versioning": "semver"}],
+  "packageRules": [
+    {
+      "matchCategories": ["docker"], 
+      "versioning": "semver"
+    }
+  ],
   "enabledManagers": ["dockerfile", "custom.regex"],
   "extends": ["config:best-practices"],
   "automerge": false,
@@ -12,9 +17,16 @@
       "customType": "regex",
       "fileMatch": ["^Dockerfile$"],
       "matchStrings": [
-        "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s*ARG\\s+(?<argName>.*?)=(?<currentValue>[\\d.]+)\\s*"
+        "#\\s*renovate:\\s*?(release=(?<release>.*?))?\\s*depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sARG .*?_version=\"(?<currentValue>.*)\""
       ],
-      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
+      "registryUrlTemplate": "https://openresty.org/package/ubuntu?{{#if release }}release={{release}}{{else}}suite=noble{{/if}}&components=main&binaryArch=amd64",
+      "datasourceTemplate": "deb"
     }
-  ]
+  ],
+  "postUpgradeTasks": {
+    "commands": [
+      "./renovate-post-upgrade-tasks.sh"
+    ]
+  }
 }
