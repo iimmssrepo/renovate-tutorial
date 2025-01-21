@@ -1,11 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "packageRules": [
-    {
-      "matchCategories": ["docker"], 
-      "versioning": "semver"
-    }
-  ],
+  "packageRules": [{"matchCategories": ["docker"], "versioning": "semver"}],
   "enabledManagers": ["dockerfile", "custom.regex"],
   "extends": ["config:best-practices"],
   "automerge": false,
@@ -16,13 +11,17 @@
     {
       "customType": "regex",
       "fileMatch": ["^Dockerfile$"],
+      "matchStringsStrategy": "any",
       "matchStrings": [
-        "#\\s*renovate:\\s*?(release=(?<release>.*?))?\\s*depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sARG .*?_version=\"(?<currentValue>.*)\""
+        "ARG PYTHON_VERSION=\"?(?<currentValue>3\\.\\d{1,2})\"?\\s"
       ],
-      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
-      "registryUrlTemplate": "https://openresty.org/package/ubuntu?{{#if release }}release={{release}}{{else}}suite=noble{{/if}}&components=main&binaryArch=amd64",
-      "datasourceTemplate": "deb"
+      "autoReplaceStringTemplate": "ARG PYTHON_VERSION={{{newValue}}}\n",
+      "currentValueTemplate": "{{{currentValue}}}",
+      "datasourceTemplate": "python-version",
+      "versioningTemplate": "python",
+      "depNameTemplate": "python"
     }
   ]
 }
+
 
