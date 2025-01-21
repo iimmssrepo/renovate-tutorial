@@ -9,6 +9,7 @@ LABEL python_version="3.10"
 # Disable Prompt During Package Installation
 ARG DEBIAN_FRONTEND=noninteractive
 
+# renovate: datasource=repology depName=ubuntu_24_04/python versioning=loose
 ARG PYTHON_VERSION=3.10
 
 USER root
