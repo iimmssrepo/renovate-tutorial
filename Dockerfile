@@ -1,30 +1,79 @@
 # Use an sngular ubuntu base as a parent image
 FROM ubuntu:24.04 AS production
 
-# labels
-LABEL description="Base image for Python-based products"
-LABEL app="python"
-LABEL python_version="3.10"
+#labels
+LABEL description="Base image for openresty based products"
+LABEL app="openresty server"
+LABEL openresty_version.label="1.25.3.2"
 
-# Disable Prompt During Package Installation
-ARG DEBIAN_FRONTEND=noninteractive
+# # resty_deb_flavor build argument is used to select other
+# # OpenResty Debian package variants.
+# # For example: "-debug" or "-valgrind"
+ARG resty_deb_flavor=""
+ARG resty_deb_version="1.25.3.2-1~noble1"
+ARG resty_image_base="ubuntu"
+ARG resty_image_tag="noble"
 
-# renovate: datasource=repology depName=ubuntu_24_04/python3 versioning=loose
-ARG PYTHON_VERSION=3.10
+# Dependencies versions
+LABEL resty_image_base.label="${resty_image_base}"
+LABEL resty_image_tag.label="${resty_image_tag}"
+LABEL resty_deb_flavor.label="${resty_deb_flavor}"
+LABEL resty_deb_version.label="${resty_deb_version}"
+
+# Add additional binaries into PATH for convenience
+ENV PATH="$PATH:/usr/local/openresty${resty_deb_flavor}/luajit/bin:/usr/local/openresty${resty_deb_flavor}/nginx/sbin:/usr/local/openresty${resty_deb_flavor}/bin"
 
 USER root
 
-RUN apt-get update \
-      && apt-get install --no-install-recommends -y \
-         python${PYTHON_VERSION} \
-         python${PYTHON_VERSION}-dev \
-         python${PYTHON_VERSION}-venv \
-         python3-pip python3-wheel python-is-python3 \
-         build-essential \
-      && apt-get clean \
-      && rm -fr /var/lib/apt/lists/apt /var/lib/apt/lists/dpkg \
-            /var/lib/apt/lists/cache /var/lib/apt/lists/log /tmp/* /var/tmp/* \
-      && rm /usr/bin/python3 \
-      && ln -s python${PYTHON_VERSION} /usr/bin/python3
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN DEBIAN_FRONTEND=noninteractive apt-get update \
+  && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    ca-certificates \
+    gettext-base \
+    gnupg2 \
+    lsb-release \
+    software-properties-common \
+    wget \
+  && rm -rf /var/lib/apt/lists/* \
+  && wget -qO /tmp/pubkey.gpg https://openresty.org/package/pubkey.gpg \
+  && gpg --dearmor -o /usr/share/keyrings/openresty.gpg < /tmp/pubkey.gpg \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/openresty.gpg] http://openresty.org/package/ubuntu $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/openresty.list > /dev/null \
+  && DEBIAN_FRONTEND=noninteractive apt-get remove -y --purge \
+    gnupg2 \
+    lsb-release \
+    software-properties-common \
+    wget \
+  && DEBIAN_FRONTEND=noninteractive apt-get update \
+  && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    openresty${resty_deb_flavor}=${resty_deb_version} \
+  && DEBIAN_FRONTEND=noninteractive apt-get autoremove -y \
+  && ln -sf /dev/stdout /usr/local/openresty${resty_deb_flavor}/nginx/logs/access.log \
+  && ln -sf /dev/stderr /usr/local/openresty${resty_deb_flavor}/nginx/logs/error.log \
+  && rm -rf /var/lib/apt/lists/* /tmp/pubkey.gpg /var/log/*log
+
+# Copy nginx configuration files
+COPY --chown=www-data:www-data conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
+COPY --chown=www-data:www-data conf/nginx.vh.default.conf /etc/nginx/conf.d/default.conf
+
+# Copy default minimal page and files
+COPY --chown=www-data:www-data resources/* /var/www/html/
+
+WORKDIR /var/www/html
+# setup permissions to folder and files
+RUN find . -type d -exec chmod 755 {} \; \
+  && find . -type f -exec chmod 644 {} \;
+
+USER www-data
+
+EXPOSE 8081
+
+# Minimal healthcheck
+HEALTHCHECK --interval=5m --timeout=3s CMD curl --fail http://localhost:8081/ || exit 1
+
+CMD [ "/usr/bin/openresty", "-g", "daemon off;" ]
+
+# Use SIGQUIT instead of default SIGTERM to cleanly drain requests
+# See https://github.com/openresty/docker-openresty/blob/master/README.md#tips--pitfalls
+STOPSIGNAL SIGQUIT
 
 
