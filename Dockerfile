@@ -1,5 +1,5 @@
 # Use an sngular ubuntu base as a parent image
-FROM ubuntu:v24.04 AS production
+FROM ubuntu:24.04 AS production
 
 # labels
 LABEL description="Base image for Python-based products"
