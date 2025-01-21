@@ -11,7 +11,7 @@ LABEL openresty_version.label="1.25.3.2"
 # # For example: "-debug" or "-valgrind"
 ARG resty_deb_flavor=""
 # renovate: release=noble depName=openresty versioning=deb
-ARG resty_deb_version="1.25.3.2-1~noble1"
+ARG resty_deb_version="1.27.1.1-1~noble1"
 ARG resty_image_base="ubuntu"
 ARG resty_image_tag="noble"
 
