@@ -11,17 +11,16 @@
     {
       "customType": "regex",
       "fileMatch": ["^Dockerfile$"],
-      "matchStringsStrategy": "any",
       "matchStrings": [
-        "ARG PYTHON_VERSION=\"?(?<currentValue>3\\.\\d{1,2})\"?\\s"
+        "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sARG .*?_VER=\"(?<currentValue>.*)\"\\s"
       ],
-      "autoReplaceStringTemplate": "ARG PYTHON_VERSION={{{newValue}}}\n",
-      "currentValueTemplate": "{{{currentValue}}}",
-      "datasourceTemplate": "python-version",
-      "versioningTemplate": "python",
-      "depNameTemplate": "python"
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
-  ]
+  ],
+  "postUpgradeTasks": {
+    "commands": [
+      "./renovate-post-upgrade-tasks.sh"
+    ]
+  }
 }
-
 
