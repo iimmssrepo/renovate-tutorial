@@ -1,4 +1,4 @@
-FROM ubuntu:noble
+FROM ubuntu:24.04
 
 # labels
 LABEL description="Base image for openresty and php"
