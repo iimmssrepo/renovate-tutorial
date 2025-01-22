@@ -1,5 +1,4 @@
-# Use an sngular ubuntu base as a parent image
-FROM ubuntu:24.04@sha256:80dd3c3b9c6cecb9f1667e9290b3bc61b78c2678c02cbdae5f0fea92cc6734ab AS production
+FROM ubuntu:24.04 AS production
 
 #labels
 LABEL description="Base image for openresty based products"
@@ -11,7 +10,7 @@ LABEL openresty_version.label="1.25.3.2"
 # # For example: "-debug" or "-valgrind"
 ARG resty_deb_flavor=""
 # renovate: release=noble depName=openresty versioning=deb
-ARG resty_deb_version="1.27.1.1-1~noble1"
+ARG resty_deb_version="1.25.3.2-1~noble1"
 ARG resty_image_base="ubuntu"
 ARG resty_image_tag="noble"
 
@@ -76,5 +75,4 @@ CMD [ "/usr/bin/openresty", "-g", "daemon off;" ]
 # Use SIGQUIT instead of default SIGTERM to cleanly drain requests
 # See https://github.com/openresty/docker-openresty/blob/master/README.md#tips--pitfalls
 STOPSIGNAL SIGQUIT
-
 
