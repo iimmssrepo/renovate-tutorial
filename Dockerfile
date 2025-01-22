@@ -4,7 +4,7 @@ FROM ubuntu:noble
 LABEL description="Base image for openresty with Java 11 runtime"
 LABEL app="openresty with java 11 service."
 
-# renovate: datasource=repology depName=ubuntu_24_04/openjdk-11 versioning=deb
+# renovate: datasource=repology depName=ubuntu_24_04/openjdk-lts versioning=deb
 ARG JAVA_VERSION="11.0.21+9-0ubuntu1~22.04"
 # renovate: datasource=repology depName=ubuntu_24_04/ca-certificates-java versioning=deb
 ARG JAVA_CA_CERTS_VERSION="20190909ubuntu1.2"
