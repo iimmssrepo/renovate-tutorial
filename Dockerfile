@@ -1,63 +1,37 @@
 FROM ubuntu:noble
 
 # labels
-LABEL description="Base image for openresty and php"
-LABEL app="phpfpm"
-LABEL php_version="8.3.93"
-LABEL php_mode="fpm"
+LABEL description="Base image for openresty with Java 11 runtime"
+LABEL app="openresty with java 11 service."
 
-# renovate: datasource=repology depName=ubuntu_24_04/php-fpm versioning=deb
-ARG PHP_FPM_VERSION="2:8.3+93ubuntu2"
+# renovate: datasource=repology depName=ubuntu_24_04/openjdk-11 versioning=deb
+ARG JAVA_VERSION="11.0.21+9-0ubuntu1~22.04"
+# renovate: datasource=repology depName=ubuntu_24_04/ca-certificates-java versioning=deb
+ARG JAVA_CA_CERTS_VERSION="20190909ubuntu1.2"
 
-LABEL php_fpm_version="${PHP_FPM_VERSION}"
+ARG JAVA_JRE_VER="${JAVA_VERSION}"
+ARG JAVA_CA_CERTS_VER="${JAVA_CA_CERTS_VERSION}"
+
+LABEL java_version="${JAVA_VERSION}"
+
+LABEL java_version="${JAVA_VERSION}"
+
+# Setup JAVA_HOME -- useful for docker commandline
+ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64/
 
 USER root
 
-# Copy entrypoint script
-COPY scripts/entrypoint.sh /opt/sngular/
-RUN chown www-data:www-data /opt/sngular/entrypoint.sh \
-    && chmod 755 /opt/sngular/entrypoint.sh
-
+# Install OpenJDK-11
 RUN DEBIAN_FRONTEND=noninteractive apt-get update \
-	&& DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --no-install-suggests -y \
-        php-fpm=$PHP_FPM_VERSION \
-        php-mysqli \
-        php-bcmath \
-        php-exif \
-        php-gd \
-        php-opcache \
-        php-zip \
-        php-curl \
-        php-xml \
-        php-intl \
-        php-redis \
-        php-gmp \
-        php-mbstring \
-        php-imagick \
-        rsync \
-        unzip \
-        curl \
-	&& DEBIAN_FRONTEND=noninteractive apt-get clean \
-    && DEBIAN_FRONTEND=noninteractive apt-get remove -y --purge \
-        gnupg2 \
-        lsb-release \
-        software-properties-common \
-	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/* \
-    && ln -sf /dev/stdout /var/log/php8.3-fpm.log \
-    && mkdir -p /usr/local/openresty/nginx/uwsgi_temp/ \
-    && mkdir -p /usr/local/openresty/nginx/scgi_temp/ \
-    && mkdir -p /usr/local/openresty/nginx/proxy_temp/ \
-    && mkdir -p /usr/local/openresty/nginx/fastcgi_temp/ \
-    && mkdir -p /usr/local/openresty/nginx/client_body_temp/ \
-    && chown www-data:www-data /usr/local/openresty/nginx/*_temp
-# Copy nginx configuration files
-COPY conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
+  && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    openjdk-11-jre-headless=${JAVA_JRE_VERSION} \
+    ca-certificates-java=${JAVA_CA_CERTS_VERSION} \
+  && DEBIAN_FRONTEND=noninteractive apt-get autoremove -y \
+  && rm -rf /var/lib/apt/lists/* \
+  && export JAVA_HOME
 
-# Copy own php-fpm & modules configuration
-RUN mkdir -p /var/run/php && \
-	mkdir -p /var/log/php-fpm
-COPY conf/phpsngular.ini /etc/php/8.3/fpm/conf.d/20-phpsngular.ini
+# Copy configuration files
+COPY --chown=www-data:www-data conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
 
 USER www-data
 
@@ -66,6 +40,6 @@ EXPOSE 8081
 # Minimal healthcheck
 HEALTHCHECK --interval=5m --timeout=3s CMD curl --fail http://localhost:8081/ || exit 1
 
-CMD ["/opt/sngular/entrypoint.sh"]
+CMD ["openresty","-g", "daemon off;"]
 
 
