@@ -1,67 +1,63 @@
-FROM ubuntu:24.04 AS production
+FROM ubuntu:v24.04
 
-#labels
-LABEL description="Base image for openresty based products"
-LABEL app="openresty server"
-LABEL openresty_version.label="1.25.3.2"
+# labels
+LABEL description="Base image for openresty and php"
+LABEL app="phpfpm"
+LABEL php_version="8.3.93"
+LABEL php_mode="fpm"
 
-# # resty_deb_flavor build argument is used to select other
-# # OpenResty Debian package variants.
-# # For example: "-debug" or "-valgrind"
-ARG resty_deb_flavor=""
-# renovate: release=noble depName=openresty versioning=deb
-ARG resty_deb_version="1.25.3.2-1~noble1"
-ARG resty_image_base="ubuntu"
-ARG resty_image_tag="noble"
+# renovate: datasource=repology depName=ubuntu_24_04/php-fpm versioning=loose
+ARG PHP_FPM_VERSION="2:8.3+93ubuntu2"
 
-# Dependencies versions
-LABEL resty_image_base.label="${resty_image_base}"
-LABEL resty_image_tag.label="${resty_image_tag}"
-LABEL resty_deb_flavor.label="${resty_deb_flavor}"
-LABEL resty_deb_version.label="${resty_deb_version}"
-
-# Add additional binaries into PATH for convenience
-ENV PATH="$PATH:/usr/local/openresty${resty_deb_flavor}/luajit/bin:/usr/local/openresty${resty_deb_flavor}/nginx/sbin:/usr/local/openresty${resty_deb_flavor}/bin"
+LABEL php_fpm_version="${PHP_FPM_VERSION}"
 
 USER root
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+# Copy entrypoint script
+COPY scripts/entrypoint.sh /opt/sngular/
+RUN chown www-data:www-data /opt/sngular/entrypoint.sh \
+    && chmod 755 /opt/sngular/entrypoint.sh
+
 RUN DEBIAN_FRONTEND=noninteractive apt-get update \
-  && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    ca-certificates \
-    gettext-base \
-    gnupg2 \
-    lsb-release \
-    software-properties-common \
-    wget \
-  && rm -rf /var/lib/apt/lists/* \
-  && wget -qO /tmp/pubkey.gpg https://openresty.org/package/pubkey.gpg \
-  && gpg --dearmor -o /usr/share/keyrings/openresty.gpg < /tmp/pubkey.gpg \
-  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/openresty.gpg] http://openresty.org/package/ubuntu $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/openresty.list > /dev/null \
-  && DEBIAN_FRONTEND=noninteractive apt-get remove -y --purge \
-    gnupg2 \
-    lsb-release \
-    software-properties-common \
-    wget \
-  && DEBIAN_FRONTEND=noninteractive apt-get update \
-  && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    openresty${resty_deb_flavor}=${resty_deb_version} \
-  && DEBIAN_FRONTEND=noninteractive apt-get autoremove -y \
-  && ln -sf /dev/stdout /usr/local/openresty${resty_deb_flavor}/nginx/logs/access.log \
-  && ln -sf /dev/stderr /usr/local/openresty${resty_deb_flavor}/nginx/logs/error.log \
-  && rm -rf /var/lib/apt/lists/* /tmp/pubkey.gpg /var/log/*log
-
+	&& DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --no-install-suggests -y \
+        php-fpm=$PHP_FPM_VERSION \
+        php-mysqli \
+        php-bcmath \
+        php-exif \
+        php-gd \
+        php-opcache \
+        php-zip \
+        php-curl \
+        php-xml \
+        php-intl \
+        php-redis \
+        php-gmp \
+        php-mbstring \
+        php-imagick \
+        rsync \
+        unzip \
+        curl \
+	&& DEBIAN_FRONTEND=noninteractive apt-get clean \
+    && DEBIAN_FRONTEND=noninteractive apt-get remove -y --purge \
+        gnupg2 \
+        lsb-release \
+        software-properties-common \
+	&& apt-get clean \
+	&& rm -rf /var/lib/apt/lists/* \
+    && ln -sf /dev/stdout /var/log/php8.3-fpm.log \
+    && mkdir -p /usr/local/openresty/nginx/uwsgi_temp/ \
+    && mkdir -p /usr/local/openresty/nginx/scgi_temp/ \
+    && mkdir -p /usr/local/openresty/nginx/proxy_temp/ \
+    && mkdir -p /usr/local/openresty/nginx/fastcgi_temp/ \
+    && mkdir -p /usr/local/openresty/nginx/client_body_temp/ \
+    && chown www-data:www-data /usr/local/openresty/nginx/*_temp
 # Copy nginx configuration files
-COPY --chown=www-data:www-data conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
-COPY --chown=www-data:www-data conf/nginx.vh.default.conf /etc/nginx/conf.d/default.conf
+COPY conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
 
-# Copy default minimal page and files
-COPY --chown=www-data:www-data resources/* /var/www/html/
-
-WORKDIR /var/www/html
-# setup permissions to folder and files
-RUN find . -type d -exec chmod 755 {} \; \
-  && find . -type f -exec chmod 644 {} \;
+# Copy own php-fpm & modules configuration
+RUN mkdir -p /var/run/php && \
+	mkdir -p /var/log/php-fpm
+COPY conf/phpsngular.ini /etc/php/8.3/fpm/conf.d/20-phpsngular.ini
 
 USER www-data
 
@@ -70,9 +66,6 @@ EXPOSE 8081
 # Minimal healthcheck
 HEALTHCHECK --interval=5m --timeout=3s CMD curl --fail http://localhost:8081/ || exit 1
 
-CMD [ "/usr/bin/openresty", "-g", "daemon off;" ]
+CMD ["/opt/sngular/entrypoint.sh"]
 
-# Use SIGQUIT instead of default SIGTERM to cleanly drain requests
-# See https://github.com/openresty/docker-openresty/blob/master/README.md#tips--pitfalls
-STOPSIGNAL SIGQUIT
 
