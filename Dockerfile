@@ -7,7 +7,7 @@ LABEL php_version="8.3.93"
 LABEL php_mode="fpm"
 
 # renovate: datasource=repology depName=ubuntu_24_04/php-fpm versioning=loose
-ARG PHP_FPM_VERSION="2:8.3+93ubuntu2"
+ARG PHP_FPM_VERSION="93ubuntu2"
 
 LABEL php_fpm_version="${PHP_FPM_VERSION}"
 
