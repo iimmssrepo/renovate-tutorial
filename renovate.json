@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "packageRules": [{"matchCategories": ["docker"], "versioning": "ubuntu"}],
+  "packageRules": [{"matchCategories": ["docker"], "versioning": "semver"}],
   "enabledManagers": ["dockerfile", "custom.regex"],
   "extends": ["config:best-practices"],
   "automerge": false,
