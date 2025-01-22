@@ -1,8 +1,8 @@
 # Specify version via build argument
-ARG UBUNTU_VERSION=24.04
+ARG UBUNTU_VERSION=24.10
 
 # Use the specified version with the correct SHA256 digest
-FROM ubuntu:${UBUNTU_VERSION}@sha256:80dd3c3b9c6cecb9f1667e9290b3bc61b78c2678c02cbdae5f0fea92cc6734ab AS production
+FROM ubuntu:${UBUNTU_VERSION}@sha256:102bc1874fdb136fc2d218473f03cf84135cb7496fefdb9c026c0f553cfe1b6d AS production
 
 # labels
 LABEL mantainer="Iñigo Montesino Vilches"
