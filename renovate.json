@@ -16,11 +16,6 @@
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
-  ],
-  "postUpgradeTasks": {
-    "commands": [
-      "./renovate-post-upgrade-tasks.sh"
-    ]
-  }
+  ]
 }
 
