@@ -4,7 +4,7 @@ FROM ubuntu:noble
 LABEL description="Base image for nodejs based products"
 LABEL app="nodejs and npm engine"
 
-# renovate: datasource=node depName=node versioning=node-version
+# renovate: datasource=node depName=node versioning=node
 ARG NODE_VERSION="20"
 ARG NODE_ENV=development
 
