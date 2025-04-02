@@ -1,45 +1,18 @@
-FROM ubuntu:noble
+FROM ubuntu:24.04@sha256:80dd3c3b9c6cecb9f1667e9290b3bc61b78c2678c02cbdae5f0fea92cc6734ab AS production
 
 # labels
-LABEL description="Base image for nodejs based products"
-LABEL app="nodejs and npm engine"
+LABEL mantainer="Iñigo Montesino Vilches"
+LABEL description="Base image for base images for products"
+LABEL app="Only OS"
+LABEL company="sngular"
+LABEL os="ubuntu"
+LABEL os_version="24.04"
+LABEL os_upgrade_date="20250204"
 
-# renovate: datasource=node depName=node versioning=node
-ARG NODE_VERSION="20"
-ARG NODE_ENV=development
+RUN apt-get update \
+        && useradd -p '*' -c '' -s /bin/false sngular
 
-LABEL node_version="${NODE_VERSION}"
+# use sngular user
+USER sngular
 
-USER root
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get -qq update \
-    && DEBIAN_FRONTEND=noninteractive apt-get -y \
-        --no-install-recommends --no-install-suggests install \
-        curl \
-        gnupg \
-    && curl -sL https://deb.nodesource.com/setup_"${NODE_VERSION}".x | bash - \
-    && DEBIAN_FRONTEND=noninteractive apt-get -y update \
-    && DEBIAN_FRONTEND=noninteractive apt-get -y upgrade \
-    && DEBIAN_FRONTEND=noninteractive apt-get -y install nodejs \
-    && DEBIAN_FRONTEND=noninteractive apt-get autoremove -y
-RUN npm install pm2 -g
-
-# Add additional binaries into PATH for convenience
-ENV NODE_ENV $NODE_ENV
-ENV PATH="$PATH:/opt/node_app/node_modules/.bin"
-
-# define workspace dir
-WORKDIR /opt/node_app
-
-RUN chown -R www-data:www-data /opt/node_app
-RUN find . -type d -exec chmod 755 {} \;
-RUN find . -type f -exec chmod 644 {} \;
-
-USER www-data
-
-EXPOSE 8081
-
-# Minimal healthcheck
-HEALTHCHECK --interval=5m --timeout=3s CMD curl --fail http://localhost:8081/ || exit 1
-
-CMD ["openresty","-g", "daemon off;"]
+HEALTHCHECK NONE
