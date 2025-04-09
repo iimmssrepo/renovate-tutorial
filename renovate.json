@@ -6,10 +6,5 @@
   "automerge": false,
   "platformAutomerge": false,
   "baseBranches": ["develop"],
-  "labels": ["update/renovate"],
-  "postUpgradeTasks": {
-    "commands": [
-      "./renovate-post-upgrade-tasks.sh"
-    ]
-  }
+  "labels": ["update/renovate"]
 }
