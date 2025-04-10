@@ -31,7 +31,7 @@ COPY . .
 RUN hugo --ignoreCache
 
 
-FROM openresty/openresty:1.25.3.2-3-alpine-fat@sha256:fd7320b66849fd5c576c8213710fa19a1fcb3a2d153ef24b84de37287b12b60a
+FROM openresty/openresty:1.27.1.2-rocky-amd64@sha256:4ddb68f51630858e7e83eaf1b7cac0a08a497ce93de0ebe43a472b67cfcc658d
 
 USER root
 
