@@ -1,15 +1,55 @@
-FROM ubuntu:24.04@sha256:80dd3c3b9c6cecb9f1667e9290b3bc61b78c2678c02cbdae5f0fea92cc6734ab AS production
+# base image
+FROM alpine:3.11.3 as builder
 
-# labels
-LABEL description="Base image for base images for products"
-LABEL app="Only OS"
-LABEL os="ubuntu"
-LABEL os_version="24.04"
-LABEL os_upgrade_date="20250204"
+# install dependencies
+RUN apk add --no-cache \
+    curl \
+    git \
+    openssh-client \
+    rsync \
+    build-base \
+    libc6-compat
 
-RUN apt-get update \
-        && useradd -p '*' -c '' -s /bin/false sngular
+# hugo version
+ARG HUGO_VERSION="0.63.2"
+
+RUN mkdir -p /usr/local/src && \
+    cd /usr/local/src && \
+    curl -L https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz | tar -xz && \
+    mv hugo /usr/local/bin/hugo && \
+    addgroup -Sg 1000 hugo && \
+    adduser -Sg hugo -u 1000 -h /src hugo
+
+# setup workdir
+WORKDIR /src
+
+# copy files
+COPY . .
+
+# build website
+RUN hugo --ignoreCache
 
 
+FROM openresty:1.25.3.2-3-alpine-fat
 
-HEALTHCHECK NONE
+USER root
+
+WORKDIR /var/www/html/
+COPY --from=builder /src/public/ ./
+
+# setup permissions to folder and files
+WORKDIR /var/www/html
+RUN chown -R www-data:www-data . && \
+        find . -type d -exec chmod 755 {} \; && \
+        find . -type f -exec chmod 644 {} \;
+
+USER www-data
+EXPOSE 8081
+
+# minimal healthcheck
+HEALTHCHECK --interval=5m --timeout=3s CMD curl --fail http://localhost:8081/ || exit 1
+
+COPY docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
+
+CMD ["openresty","-g", "daemon off;"]
