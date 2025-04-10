@@ -12,7 +12,7 @@ RUN apk add --no-cache \
 
 # hugo version
 # renovate: datasource=github-releases depName=gohugoio/hugo versioning=loose
-ARG HUGO_VERSION="0.145.0"
+ARG HUGO_VERSION="0.63.2"
 
 RUN mkdir -p /usr/local/src && \
     cd /usr/local/src && \
