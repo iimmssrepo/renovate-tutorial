@@ -1,5 +1,5 @@
 # base image
-FROM alpine:3.11.3 as builder
+FROM alpine:3.11.3@sha256:ab00606a42621fb68f2ed6ad3c88be54397f981a7b70a79db3d1172b11c4367d as builder
 
 # install dependencies
 RUN apk add --no-cache \
@@ -31,7 +31,7 @@ COPY . .
 RUN hugo --ignoreCache
 
 
-FROM openresty/openresty:1.25.3.2-3-alpine-fat
+FROM openresty/openresty:1.25.3.2-3-alpine-fat@sha256:fd7320b66849fd5c576c8213710fa19a1fcb3a2d153ef24b84de37287b12b60a
 
 USER root
 
