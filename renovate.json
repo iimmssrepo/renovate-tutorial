@@ -1,9 +1,21 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "enabledManagers": ["dockerfile"],
-  "packageRules": [{"matchCategories": ["docker"]}],
+  "packageRules": [{"matchCategories": ["docker"], "versioning": "loose"}],
+  "enabledManagers": ["dockerfile", "custom.regex"],
   "extends": ["config:best-practices"],
   "automerge": false,
   "platformAutomerge": false,
-  "labels": ["update/renovate"]
+  "labels": ["update/renovate"],
+  "prHourlyLimit": 5,
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^Dockerfile$"],
+      "depNameTemplate": "gohugoio/hugo",
+      "matchStrings": ["ARG HUGO_VERSION=(?<currentValue>.*?)\\n"],
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "loose"
+    }
+  ]
 }
+
