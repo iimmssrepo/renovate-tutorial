@@ -11,6 +11,7 @@ RUN apk add --no-cache \
     libc6-compat
 
 # hugo version
+# renovate: datasource=github-releases depName=gohugoio/hugo versioning=loose
 ARG HUGO_VERSION="0.63.2"
 
 RUN mkdir -p /usr/local/src && \
