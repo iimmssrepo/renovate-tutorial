@@ -30,7 +30,7 @@ COPY . .
 RUN hugo --ignoreCache
 
 
-FROM opeopenresty/openresty:1.25.3.2-3-alpine-fat
+FROM openresty/openresty:1.25.3.2-3-alpine-fat
 
 USER root
 
