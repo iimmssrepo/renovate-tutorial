@@ -5,6 +5,5 @@
   "extends": ["config:best-practices"],
   "automerge": false,
   "platformAutomerge": false,
-  "baseBranches": ["develop"],
   "labels": ["update/renovate"]
 }
