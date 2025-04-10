@@ -12,7 +12,7 @@
       "customType": "regex",
       "fileMatch": ["^Dockerfile$"],
       "depNameTemplate": "gohugoio/hugo",
-      "matchStrings": ["ARG HUGO_VERSION=\"(?<currentValue>[^\"]+)\"\\n"],
+      "matchStrings": ["ARG HUGO_VERSION=\"(?<currentValue>[^\"]+)\""],
       "datasourceTemplate": "github-releases",
       "versioningTemplate": "loose"
     }
