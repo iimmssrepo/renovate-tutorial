@@ -1,7 +1,7 @@
 FROM python:3.11-alpine
 
 # renovate: datasource=github-releases depName=maxmind/geoipupdate versioning=loose
-ARG GEOIPUPDATE_VER=6.0.0
+ARG GEOIPUPDATE_VER="6.0.0"
 
 # Install system dependencies
 RUN apk add --update --no-cache \
