@@ -1,4 +1,4 @@
-FROM python:3.11-alpine
+FROM python:3.11-alpine@sha256:32ac7ba3dad4bcee9c8cfaf3b489f832b84ba0a1eb8ef76685456d424baaf444
 
 # renovate: datasource=github-releases depName=maxmind/geoipupdate versioning=loose
 ARG GEOIPUPDATE_VER="6.0.0"
