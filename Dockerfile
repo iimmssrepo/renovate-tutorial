@@ -1,7 +1,7 @@
 FROM python:3.11-alpine
 
 # renovate: datasource=github-releases depName=maxmind/geoipupdate versioning=loose
-ARG GEOIPUPDATE_VERSION=6.0.0
+ARG GEOIPUPDATE_VER=6.0.0
 
 # Install system dependencies
 RUN apk add --update --no-cache \
@@ -17,10 +17,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Set up geoipupdate for automatic updates
 RUN wget -O /tmp/geoipupdate.tar.gz \
-    https://github.com/maxmind/geoipupdate/releases/download/v${GEOIPUPDATE_VERSION}/geoipupdate_${GEOIPUPDATE_VERSION}_linux_amd64.tar.gz \
+    https://github.com/maxmind/geoipupdate/releases/download/v${GEOIPUPDATE_VER}/geoipupdate_${GEOIPUPDATE_VER}_linux_amd64.tar.gz \
     && tar -zxf /tmp/geoipupdate.tar.gz -C /tmp \
-    && mv /tmp/geoipupdate_${GEOIPUPDATE_VERSION}_linux_amd64/geoipupdate /usr/local/bin/ \
-    && rm -rf /tmp/geoipupdate_${GEOIPUPDATE_VERSION}_linux_amd64/ /tmp/geoipupdate.tar.gz
+    && mv /tmp/geoipupdate_${GEOIPUPDATE_VER}_linux_amd64/geoipupdate /usr/local/bin/ \
+    && rm -rf /tmp/geoipupdate_${GEOIPUPDATE_VER}_linux_amd64/ /tmp/geoipupdate.tar.gz
 
 # Copy configuration files
 COPY entrypoint.sh /usr/local/bin/
