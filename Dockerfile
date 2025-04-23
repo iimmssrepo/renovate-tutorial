@@ -1,56 +1,38 @@
-# base image
-FROM alpine:3.21.3@sha256:a8560b36e8b8210634f77d9f7f9efd7ffa463e380b75e2e74aff4511df3ef88c as builder
+FROM python:3.11-alpine
 
-# install dependencies
-RUN apk add --no-cache \
-    curl \
-    git \
-    openssh-client \
-    rsync \
+# renovate: datasource=github-releases depName=maxmind/geoipupdate versioning=loose
+ARG GEOIPUPDATE_VERSION=6.0.0
+
+# Install system dependencies
+RUN apk add --update --no-cache \
     build-base \
-    libc6-compat
+    libxml2-dev \
+    libxslt-dev \
+    libffi-dev \
+    wget
 
-# hugo version
-# renovate: datasource=github-releases depName=gohugoio/hugo versioning=loose
-ARG HUGO_VERSION="0.63.2"
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN mkdir -p /usr/local/src && \
-    cd /usr/local/src && \
-    curl -L https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz | tar -xz && \
-    mv hugo /usr/local/bin/hugo && \
-    addgroup -Sg 1000 hugo && \
-    adduser -Sg hugo -u 1000 -h /src hugo
+# Set up geoipupdate for automatic updates
+RUN wget -O /tmp/geoipupdate.tar.gz \
+    https://github.com/maxmind/geoipupdate/releases/download/v${GEOIPUPDATE_VERSION}/geoipupdate_${GEOIPUPDATE_VERSION}_linux_amd64.tar.gz \
+    && tar -zxf /tmp/geoipupdate.tar.gz -C /tmp \
+    && mv /tmp/geoipupdate_${GEOIPUPDATE_VERSION}_linux_amd64/geoipupdate /usr/local/bin/ \
+    && rm -rf /tmp/geoipupdate_${GEOIPUPDATE_VERSION}_linux_amd64/ /tmp/geoipupdate.tar.gz
 
-# setup workdir
-WORKDIR /src
+# Copy configuration files
+COPY entrypoint.sh /usr/local/bin/
+COPY GeoIP.conf parsedmarc.ini /usr/local/etc/
+COPY geoip_update_cron /etc/cron.d/
 
-# copy files
-COPY . .
+# Set permissions
+RUN chmod +x /usr/local/bin/entrypoint.sh \
+    && chmod 644 /etc/cron.d/geoip_update_cron
 
-# build website
-RUN hugo --ignoreCache
+# Run geoipupdate
+RUN geoipupdate
 
-
-FROM openresty/openresty:1.27.1.2-rocky-amd64@sha256:4ddb68f51630858e7e83eaf1b7cac0a08a497ce93de0ebe43a472b67cfcc658d
-
-USER root
-
-WORKDIR /var/www/html/
-COPY --from=builder /src/public/ ./
-
-# setup permissions to folder and files
-WORKDIR /var/www/html
-RUN chown -R www-data:www-data . && \
-        find . -type d -exec chmod 755 {} \; && \
-        find . -type f -exec chmod 644 {} \;
-
-USER www-data
-EXPOSE 8081
-
-# minimal healthcheck
-HEALTHCHECK --interval=5m --timeout=3s CMD curl --fail http://localhost:8081/ || exit 1
-
-COPY docker-entrypoint.sh /usr/local/bin/
-ENTRYPOINT ["docker-entrypoint.sh"]
-
-CMD ["openresty","-g", "daemon off;"]
+# Set entrypoint
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
