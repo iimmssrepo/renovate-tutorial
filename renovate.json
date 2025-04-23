@@ -11,10 +11,10 @@
     {
       "customType": "regex",
       "fileMatch": ["^Dockerfile$"],
-      "depNameTemplate": "gohugoio/hugo",
-      "matchStrings": ["ARG HUGO_VERSION=\"(?<currentValue>[^\"]+)\""],
-      "datasourceTemplate": "github-releases",
-      "versioningTemplate": "loose"
+      "matchStrings": [
+        "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sARG .*?_VER=\"(?<currentValue>.*)\"\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
   ]
 }
