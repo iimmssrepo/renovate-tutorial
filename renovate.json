@@ -11,7 +11,6 @@
       "allowedVersions": "/^\\d+\\.\\d+\\.\\d+-alpine$/"
     }
   ],
-  "enabledManagers": ["dockerfile", "custom.regex", "pip_requirements"],
   "extends": ["config:best-practices"],
   "automerge": false,
   "platformAutomerge": false,
