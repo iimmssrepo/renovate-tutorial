@@ -2,25 +2,40 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "packageRules": [
     {
-      "matchCategories": ["docker"], 
+      "matchCategories": [
+        "docker"
+      ],
       "versioning": "loose"
     },
     {
-      "matchManagers": ["dockerfile"],
-      "matchPackageNames": ["python"],
+      "matchManagers": [
+        "dockerfile"
+      ],
+      "matchPackageNames": [
+        "python"
+      ],
       "allowedVersions": "/^\\d+\\.\\d+\\.\\d+-alpine$/"
     }
   ],
-  "enabledManagers": ["dockerfile", "regex"],
-  "extends": ["config:best-practices"],
+  "enabledManagers": [
+    "dockerfile",
+    "custom.regex"
+  ],
+  "extends": [
+    "config:best-practices"
+  ],
   "automerge": false,
   "platformAutomerge": false,
-  "labels": ["update/renovate"],
+  "labels": [
+    "update/renovate"
+  ],
   "prHourlyLimit": 5,
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^Dockerfile$"],
+      "fileMatch": [
+        "^Dockerfile$"
+      ],
       "matchStrings": [
         "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sARG .*?_VER=\"(?<currentValue>.*)\"\\s"
       ],
