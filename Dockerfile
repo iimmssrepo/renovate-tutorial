@@ -29,7 +29,7 @@ COPY ./.env ./.env
 RUN mkdir -p /opt/composer/public
 RUN composer install --ignore-platform-reqs
 
-FROM keglin/pinchflat:v2025.1.17@sha256:40de806237be4414725cb2dfda5d73f69617aaa9479b11643d055e0e7362f082
+FROM keglin/pinchflat:v2025.3.17@sha256:06e20be2ad935f1ee2b527f99d1492086d7b82713739abf016e46632992079ec
 
 RUN export APP_ENV='${APP_ENV}' && \
 	export APP_SECRET='${APP_SECRET}' && \
