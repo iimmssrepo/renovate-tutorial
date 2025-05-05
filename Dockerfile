@@ -1,5 +1,5 @@
 # Node
-FROM node:18.20.8@sha256:867be01f97d45cb7d89a8ef0b328d23e8207412ebec4564441ed8cabc8cc4ecd AS node
+FROM node:23.11.0@sha256:ee8a0bc5bbaece0c538c76e7c20fde6d4db319bbd5d4e423940999f16da89aa1 AS node
 
 # install specific npm
 RUN npm i npm@9.6.7 -g
