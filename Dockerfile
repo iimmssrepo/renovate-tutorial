@@ -29,8 +29,7 @@ COPY ./.env ./.env
 RUN mkdir -p /opt/composer/public
 RUN composer install --ignore-platform-reqs
 
-# Use a pepito openresty openid base as a parent image
-FROM image-registry.pepito.com/openresty-php:v0.1.9
+FROM keglin/pinchflat:v2025.1.17
 
 RUN export APP_ENV='${APP_ENV}' && \
 	export APP_SECRET='${APP_SECRET}' && \
