@@ -16,7 +16,7 @@ RUN npm install --no-optional --legacy-peer-deps
 RUN npm run build
 
 # composer build
-FROM composer:2.4.4@sha256:c63dea37578e0d4c0e570d5dd7974c6f248b8d6080680e1ddd72c9da5a05062f AS composer
+FROM composer:2.8.8@sha256:d9d52c36baea592479eb7e024d4c1afaba9bdea27d67566c588d290a31b4b0d1 AS composer
 
 # install dependencies from composer.json
 WORKDIR /opt/composer/
