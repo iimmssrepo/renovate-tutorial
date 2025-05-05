@@ -1,5 +1,5 @@
 # Node
-FROM node:18 AS node
+FROM node:18.20.8@sha256:867be01f97d45cb7d89a8ef0b328d23e8207412ebec4564441ed8cabc8cc4ecd AS node
 
 # install specific npm
 RUN npm i npm@9.6.7 -g
@@ -29,7 +29,7 @@ COPY ./.env ./.env
 RUN mkdir -p /opt/composer/public
 RUN composer install --ignore-platform-reqs
 
-FROM keglin/pinchflat:v2025.1.17
+FROM keglin/pinchflat:v2025.1.17@sha256:40de806237be4414725cb2dfda5d73f69617aaa9479b11643d055e0e7362f082
 
 RUN export APP_ENV='${APP_ENV}' && \
 	export APP_SECRET='${APP_SECRET}' && \
