@@ -1,5 +1,5 @@
 
-FROM ubuntu:24.04@sha256:6015f66923d7afbc53558d7ccffd325d43b4e249f41a6e93eef074c9505d2233 AS production
+FROM ubuntu:24.10@sha256:aadf9a3f5eda81295050d13dabe851b26a67597e424a908f25a63f589dfed48f AS production
 
 # labels
 LABEL mantainer="Cloud Devops Team"
