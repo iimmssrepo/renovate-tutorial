@@ -1,11 +1,50 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "packageRules": [{"matchCategories": ["docker"], "versioning": "loose"}],
-  "enabledManagers": ["dockerfile"],
-  "extends": ["config:best-practices"],
-  "automerge": false,
-  "platformAutomerge": false,
+  "enabledManagers": ["dockerfile", "custom.regex"],
+  "extends": [
+    "config:best-practices",
+    ":semanticCommits"
+  ],
+  "automerge": true,
+  "platformAutomerge": true,
   "labels": ["update/renovate"],
-  "prHourlyLimit": 5
+  "prHourlyLimit": 5,
+  "packageRules": [
+    {
+      "matchCategories": ["docker"], 
+      "versioning": "loose"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["patch"],
+      "semanticCommitType": "fix"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["minor"],
+      "semanticCommitType": "feat"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["major"],
+      "semanticCommitType": "feat",
+      "breakingChangeNote": "Major version upgrade of the base image."
+    },    
+    {
+      "description": "Set Java updates to trigger patch releases",
+      "matchDatasources": ["repology"],
+      "semanticCommitType": "fix"
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^Dockerfile$"],
+      "matchStrings": [
+        "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sARG .*?_VER=\"(?<currentValue>.*)\"\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    }
+  ]
 }
 
