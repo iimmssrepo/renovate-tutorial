@@ -1,87 +1,32 @@
-# Node
-FROM node:18.20.8@sha256:867be01f97d45cb7d89a8ef0b328d23e8207412ebec4564441ed8cabc8cc4ecd AS node
 
-# install specific npm
-RUN npm i npm@9.6.7 -g
+FROM ubuntu:24.04 AS production
 
-# install dependencies from package.json file
-WORKDIR /opt/package
-COPY ./package*.json ./
-COPY ./esbuild*.mjs ./
-COPY ./assets ./assets/
+# labels
+LABEL mantainer="Cloud Devops Team"
+LABEL description="Base image for java 8 runtime"
+LABEL app="java 8"
+LABEL java_version="8u452-ga~us1-0ubuntu1~24.04 amd64"
 
-RUN npm install --no-optional --legacy-peer-deps
-
-# build
-RUN npm run build
-
-# composer build
-FROM composer:2.8.8@sha256:d9d52c36baea592479eb7e024d4c1afaba9bdea27d67566c588d290a31b4b0d1 AS composer
-
-# install dependencies from composer.json
-WORKDIR /opt/composer/
-COPY ./composer.* ./
-COPY ./bin ./bin/
-COPY ./src ./src/
-COPY ./config ./config/
-COPY ./.env ./.env
-
-RUN mkdir -p /opt/composer/public
-RUN composer install --ignore-platform-reqs
-
-FROM keglin/pinchflat:v2025.3.17@sha256:06e20be2ad935f1ee2b527f99d1492086d7b82713739abf016e46632992079ec
-
-RUN export APP_ENV='${APP_ENV}' && \
-	export APP_SECRET='${APP_SECRET}' && \
-	export TRUSTED_HOSTS='${TRUSTED_HOSTS}' && \
-	export BUILD='${BUILD}' && \
-	export DATABASE_URL='${DATABASE_URL}' && \
-	export SNGWEB_STORAGE_BUCKET='${SNGWEB_STORAGE_BUCKET}' && \
-	export SNGWEB_STORAGE_CDN='${SNGWEB_STORAGE_CDN}' && \
-	export REDIS_PORT='${REDIS_PORT}' && \
-	export REDIS_HOST='${REDIS_HOST}' && \
-	export REDIS_PASSWORD='${REDIS_PASSWORD}' && \
-	export LOCK_DSN='${LOCK_DSN}'
+# renovate: datasource=repology depName=ubuntu_24_04/openjdk-8 versioning=loose
+ARG JAVA_JRE_VER="8u452-ga~us1-0ubuntu1~24.04"
+# renovate: datasource=repology depName=ubuntu_24_04/ca-certificates-java versioning=loose
+ARG JAVA_CA_CERTS_VER="20240118"
 
 USER root
 
-RUN apt-get update && \
-	apt-get install --no-install-recommends --no-install-suggests -y \
-	&& rm -rf /var/lib/apt/lists/*
+# Install OpenJDK-8
+RUN DEBIAN_FRONTEND=noninteractive apt-get update \
+  && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    openjdk-8-jre-headless=${JAVA_JRE_VER} \
+    ca-certificates-java=${JAVA_CA_CERTS_VER} \
+  && DEBIAN_FRONTEND=noninteractive apt-get autoremove -y \
+  && rm -rf /var/lib/apt/lists/*
 
-# Setup permissions to folder and files
-RUN chown -R www-data:www-data /var/www/html && chown -R www-data:www-data /run/php/ \
-	&& find . -type d -exec chmod 755 {} \; \
-	&& find . -type f -exec chmod 644 {} \;
+# Setup JAVA_HOME -- useful for docker commandline
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjre-amd64/
 
-USER www-data
+RUN export JAVA_HOME
 
-# Copy own pepito code
-WORKDIR /var/www/html/
+USER pepe
 
-RUN mkdir -p var/cache/dev
-RUN mkdir -p var/log
-
-COPY ./containerconf/20-phppepito.ini /etc/php/8.1/fpm/conf.d/20-phppepito.ini
-COPY ./bin ./bin/
-COPY ./config ./config/
-COPY ./src ./src/
-COPY ./templates ./templates/
-COPY ./translations ./translations/
-COPY ./.env ./.env
-COPY ./composer.json ./
-COPY --from=node --chown=www-data:www-data /opt/package/public/ ./public/
-COPY --from=composer --chown=www-data:www-data /opt/composer/vendor/ ./vendor/
-COPY --from=composer --chown=www-data:www-data /opt/composer/public/ ./public/
-COPY --chown=www-data:www-data ./public/index.php ./public/
-COPY ./containerconf/www.conf /etc/php/8.1/fpm/pool.d/www.conf
-COPY ./containerconf/php-fpm.conf /etc/php/8.1/fpm/php-fpm.conf
-COPY ./containerconf/entrypoint.sh /opt/pepito/entrypoint.sh
-
-EXPOSE 8081
-
-# Minimal healthcheck
-HEALTHCHECK --interval=5m --timeout=3s CMD curl --fail http://localhost:8081/ || exit 1
-
-CMD ["/opt/pepito/entrypoint.sh"]
-
+HEALTHCHECK NONE
