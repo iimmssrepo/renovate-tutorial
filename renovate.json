@@ -47,8 +47,8 @@
         "major"
       ],
       "semanticCommitType": "feat",
-      "commitMessageExtra": "!",
-      "commitMessageFooter": "BREAKING CHANGE: Major version upgrade of the base image."
+      "commitMessagePrefix": "feat(base image)!:",
+      "commitMessageExtra": "BREAKING CHANGE: Major version upgrade of the base image."
     },
     {
       "description": "Set Java updates to trigger patch releases",
