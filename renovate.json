@@ -1,45 +1,68 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "enabledManagers": ["dockerfile", "custom.regex"],
+  "enabledManagers": [
+    "dockerfile",
+    "custom.regex"
+  ],
   "extends": [
     "config:best-practices",
     ":semanticCommits"
   ],
   "automerge": true,
   "platformAutomerge": true,
-  "labels": ["update/renovate"],
+  "labels": [
+    "update/renovate"
+  ],
   "prHourlyLimit": 5,
   "packageRules": [
     {
-      "matchCategories": ["docker"], 
+      "matchCategories": [
+        "docker"
+      ],
       "versioning": "loose"
     },
     {
-      "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["patch"],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
       "semanticCommitType": "fix"
     },
     {
-      "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["minor"],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "minor"
+      ],
       "semanticCommitType": "feat"
     },
     {
-      "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["major"],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "semanticCommitType": "feat",
       "prBodyTemplate": "{{PR_BODY}}\n\n### BREAKING CHANGE\nThis update to {{depName}} is a major version change for the Docker base image. Please verify compatibility and potential breaking changes introduced by the new base image version."
-    },    
+    },
     {
       "description": "Set Java updates to trigger patch releases",
-      "matchDatasources": ["repology"],
+      "matchDatasources": [
+        "repology"
+      ],
       "semanticCommitType": "fix"
     }
   ],
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^Dockerfile$"],
+      "managerFilePatterns": [
+        "/^Dockerfile$/"
+      ],
       "matchStrings": [
         "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sARG .*?_VER=\"(?<currentValue>.*)\"\\s"
       ],
@@ -47,4 +70,3 @@
     }
   ]
 }
-
