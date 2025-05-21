@@ -28,7 +28,7 @@
       "matchDatasources": ["docker"],
       "matchUpdateTypes": ["major"],
       "semanticCommitType": "feat",
-      "breakingChangeNote": "Major version upgrade of the base image."
+      "prBodyTemplate": "{{PR_BODY}}\n\n### BREAKING CHANGE\nThis update to {{depName}} is a major version change for the Docker base image. Please verify compatibility and potential breaking changes introduced by the new base image version."
     },    
     {
       "description": "Set Java updates to trigger patch releases",
