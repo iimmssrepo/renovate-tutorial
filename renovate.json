@@ -47,7 +47,8 @@
         "major"
       ],
       "semanticCommitType": "feat",
-      "commitMessage": "feat(docker-base)!: update {{depName}} to v{{newMajor}}\n\nBREAKING CHANGE: Major version upgrade of the base image."
+      "commitMessageExtra": "!",
+      "commitMessageFooter": "BREAKING CHANGE: Major version upgrade of the base image."
     },
     {
       "description": "Set Java updates to trigger patch releases",
