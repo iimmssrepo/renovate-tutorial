@@ -1,32 +1,76 @@
-
-FROM ubuntu:25.10@sha256:36bbb8adc0662496d3e314bc8a25cb41c0c2e42ed25daaa07f8369d36d16f082 AS production
+FROM ubuntu:22.04
 
 # labels
-LABEL mantainer="Cloud Devops Team"
-LABEL description="Base image for java 8 runtime"
-LABEL app="java 8"
-LABEL java_version="8u452-ga~us1-0ubuntu1~24.04 amd64"
+LABEL description="Base image for openresty and php"
+LABEL app="phpfpm"
+LABEL php_version="8.3.93"
+LABEL php_mode="fpm"
 
-# renovate: datasource=repology depName=ubuntu_24_04/openjdk-8 versioning=loose
-ARG JAVA_JRE_VER="8u452-ga~us1-0ubuntu1~24.04"
-# renovate: datasource=repology depName=ubuntu_24_04/ca-certificates-java versioning=loose
-ARG JAVA_CA_CERTS_VER="20240118"
+# renovate: datasource=repology depName=ubuntu_24_04/php-fpm versioning=deb
+ARG PHP_FPM_VERSION="2:8.3+93ubuntu2"
+# renovate: datasource=repology depName=ubuntu_24_04/php-fpm versioning=loose
+ARG PHP_MAJOR_MINOR_VERSION="8.3"
+
+ENV PHP_MAJOR_MINOR_VERSION=${PHP_MAJOR_MINOR_VERSION}
+
+LABEL php_fpm_version="${PHP_FPM_VERSION}"
 
 USER root
 
-# Install OpenJDK-8
+# Copy entrypoint script
+COPY scripts/entrypoint.sh /opt/pepe/
+RUN chown www-data:www-data /opt/pepe/entrypoint.sh \
+    && chmod 755 /opt/pepe/entrypoint.sh
+
 RUN DEBIAN_FRONTEND=noninteractive apt-get update \
-  && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    openjdk-8-jre-headless=${JAVA_JRE_VER} \
-    ca-certificates-java=${JAVA_CA_CERTS_VER} \
-  && DEBIAN_FRONTEND=noninteractive apt-get autoremove -y \
-  && rm -rf /var/lib/apt/lists/*
+	&& DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --no-install-suggests -y \
+        php-fpm=$PHP_FPM_VERSION \
+        php-mysqli \
+        php-bcmath \
+        php-exif \
+        php-gd \
+        php-opcache \
+        php-zip \
+        php-curl \
+        php-xml \
+        php-intl \
+        php-redis \
+        php-gmp \
+        php-mbstring \
+        php-imagick \
+        rsync \
+        unzip \
+        curl \
+	&& DEBIAN_FRONTEND=noninteractive apt-get clean \
+    && DEBIAN_FRONTEND=noninteractive apt-get remove -y --purge \
+        gnupg2 \
+        lsb-release \
+        software-properties-common \
+	&& apt-get clean \
+	&& rm -rf /var/lib/apt/lists/* \
+    && ln -sf /dev/stdout /var/log/php8.3-fpm.log \
+    && mkdir -p /usr/local/openresty/nginx/uwsgi_temp/ \
+    && mkdir -p /usr/local/openresty/nginx/scgi_temp/ \
+    && mkdir -p /usr/local/openresty/nginx/proxy_temp/ \
+    && mkdir -p /usr/local/openresty/nginx/fastcgi_temp/ \
+    && mkdir -p /usr/local/openresty/nginx/client_body_temp/ \
+    && chown www-data:www-data /usr/local/openresty/nginx/*_temp
+# Copy nginx configuration files
+COPY conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
 
-# Setup JAVA_HOME -- useful for docker commandline
-ENV JAVA_HOME /usr/lib/jvm/java-8-openjre-amd64/
+# Copy own php-fpm & modules configuration
+RUN mkdir -p /var/run/php && \
+	mkdir -p /var/log/php-fpm && \
+    ln -sf /run/php/php${PHP_MAJOR_MINOR_VERSION}-fpm.sock /var/run/php-fpm.sock
 
-RUN export JAVA_HOME
+COPY conf/phppepe.ini /etc/php/${PHP_MAJOR_MINOR_VERSION}/fpm/conf.d/20-phppepe.ini
 
-USER pepe
+USER www-data
 
-HEALTHCHECK NONE
+EXPOSE 8081
+
+# Minimal healthcheck
+HEALTHCHECK --interval=5m --timeout=3s CMD curl --fail http://localhost:8081/ || exit 1
+
+CMD ["/opt/pepe/entrypoint.sh"]
+
