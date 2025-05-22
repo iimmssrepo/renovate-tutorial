@@ -72,11 +72,13 @@
       "customType": "regex",
       "fileMatch": ["^Dockerfile$"],
       "matchStrings": [
-        "ARG PHP_MAJOR_MINOR_VERSION=\"(?<currentValue>.*?)\""
+        "ARG PHP_MAJOR_MINOR_VERSION=\"(?<currentValue>\\d+\\.\\d+)\""
       ],
-      "depNameTemplate": "ubuntu_24_04/php-fpm",
       "datasourceTemplate": "repology",
-      "replacementString": "ARG PHP_MAJOR_MINOR_VERSION=\"{{newDigest}}\""
+      "depNameTemplate": "ubuntu_24_04/php-fpm",
+      "versioningTemplate": "loose",
+      "extractVersionTemplate": "(?<=ARG PHP_FPM_VERSION=\\\"\\d+:)(?<version>\\d+\\.\\d+)(?=\\+)",
+      "replacementTemplate": "ARG PHP_MAJOR_MINOR_VERSION=\"{{newVersion}}\""
     }
   ]
 }
