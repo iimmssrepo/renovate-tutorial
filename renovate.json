@@ -67,18 +67,6 @@
         "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sARG .*?_VERSION=\"(?<currentValue>.*)\"\\s"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": ["^Dockerfile$"],
-      "matchStrings": [
-        "ARG PHP_MAJOR_MINOR_VERSION=\"(?<currentValue>\\d+\\.\\d+)\""
-      ],
-      "datasourceTemplate": "repology",
-      "depNameTemplate": "ubuntu_24_04/php-fpm",
-      "versioningTemplate": "loose",
-      "extractVersionTemplate": "(?<=ARG PHP_FPM_VERSION=\\\"\\d+:)(?<version>\\d+\\.\\d+)(?=\\+)",
-      "replacementTemplate": "ARG PHP_MAJOR_MINOR_VERSION=\"{{newVersion}}\""
     }
   ]
 }
