@@ -3,13 +3,13 @@ FROM ubuntu:22.04
 # labels
 LABEL description="Base image for openresty and php"
 LABEL app="phpfpm"
-LABEL php_version="8.3.93"
+LABEL php_version="8.0.1"
 LABEL php_mode="fpm"
 
 # renovate: datasource=repology depName=ubuntu_24_04/php-fpm versioning=deb
-ARG PHP_FPM_VERSION="2:8.3+93ubuntu2"
+ARG PHP_FPM_VERSION="2:8.0+93ubuntu2"
 # renovate: datasource=repology depName=ubuntu_24_04/php-fpm versioning=loose
-ARG PHP_MAJOR_MINOR_VERSION="8.3"
+ARG PHP_MAJOR_MINOR_VERSION="8.0"
 
 ENV PHP_MAJOR_MINOR_VERSION=${PHP_MAJOR_MINOR_VERSION}
 
