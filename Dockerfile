@@ -1,4 +1,4 @@
-FROM jenkins/inbound-agent:3283.v92c105e0f819-1
+FROM jenkins/inbound-agent:3283.v92c105e0f819-1-jdk21
 
 # systems versions
 # renovate: datasource=repology depName=jq versioning=loose
