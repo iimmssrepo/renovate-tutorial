@@ -1,4 +1,4 @@
-FROM jenkins/inbound-agent:3283.v92c105e0f819-1@sha256:7df39b03883b9741dacbaac976f054d584c21aeeb54474cf315c5b8dd03db7ef
+FROM jenkins/inbound-agent:3283.v92c105e0f819-9-windowsservercore-ltsc2022@sha256:a6bb47acf9ffcf87a962540a273b285a059737aed2df2c7bda2cf8673dd2d44c
 
 # systems versions
 ENV JQ_VERSION=1.6-2.1
