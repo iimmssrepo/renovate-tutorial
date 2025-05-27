@@ -52,7 +52,7 @@
       "commitMessageExtra": "BREAKING CHANGE: Major version upgrade of the base image."
     },
     {
-      "description": "Set php updates to trigger patch releases",
+      "description": "Set Java updates to trigger patch releases",
       "matchDatasources": [
         "repology"
       ],
