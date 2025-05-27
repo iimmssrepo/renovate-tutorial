@@ -1,17 +1,29 @@
 FROM jenkins/inbound-agent:3283.v92c105e0f819-1
 
 # systems versions
+# renovate: datasource=repology depName=jq versioning=loose
 ENV JQ_VERSION=1.6-2.1
+# renovate: datasource=repology depName=sonarqube versioning=loose
 ENV SONAR_VERSION=6.2.1.4610
+# renovate: datasource=node-version depName=nodejs versioning=semver
 ENV NODEJS_VERSION=20.18.0-1nodesource1
+# renovate: datasource=npm depName=@angular/cli # Assuming this is Angular CLI version, if not, adjust datasource/depName
 ENV NG_VERSION=12.2.15
+# renovate: datasource=github-releases depName=aws/aws-cli versioning=semver
 ENV AWS_VERSION=2.19.5
+# renovate: datasource=github-releases depName=composer/composer versioning=semver
 ENV COMPOSER_VERSION=2.8.2
+# renovate: datasource=repology depName=netcat versioning=loose
 ENV NC_VERSION=1.10-47
+# renovate: datasource=repology depName=postgresql-client versioning=loose
 ENV PSQL_CLIENT_VERSION=15+248
+# renovate: datasource=repology depName=curl versioning=loose
 ENV CURL_VERSION=7.88.1-10+deb12u8
+# renovate: datasource=repology depName=zip versioning=loose
 ENV ZIP_VERSION=3.0-13
+# renovate: datasource=repology depName=unzip versioning=loose
 ENV UNZIP_VERSION=6.0-28
+# renovate: datasource=repology depName=python versioning=loose
 ENV PYTHON_VERSION=3.11.2-1+b1
 
 # use root user to install packages
