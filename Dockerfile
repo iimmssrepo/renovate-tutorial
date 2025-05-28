@@ -1,4 +1,4 @@
-FROM jenkins/inbound-agent:3283.v92c105e0f819-1
+FROM jenkins/inbound-agent:3283.v92c105e0f819-1@sha256:7df39b03883b9741dacbaac976f054d584c21aeeb54474cf315c5b8dd03db7ef
 
 # systems versions
 # renovate: datasource=repology depName=debian_12/jq versioning=loose
