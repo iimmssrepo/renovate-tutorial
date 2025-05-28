@@ -1,6 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "enabledManagers": ["dockerfile", "custom.regex"],
+  "enabledManagers": [
+    "dockerfile",
+    "custom.regex"
+  ],
   "extends": [
     "config:best-practices",
     ":semanticCommits"
@@ -53,15 +56,21 @@
     },
     {
       "description": "remoting agent uses non-standard versioning",
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["jenkins/inbound-agent"],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "jenkins/inbound-agent"
+      ],
       "versioning": "regex:^(?<major>\\d+)\\.(?<minor>[^\\.-]*)(\\.(?<patch>\\d+))?(-(?<build>\\d+))?$"
     }
   ],
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^Dockerfile$"],
+      "managerFilePatterns": [
+        "/^Dockerfile$/"
+      ],
       "matchStrings": [
         "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sENV .*?_VER=\"(?<currentValue>.*)\"\\s"
       ],
