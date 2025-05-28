@@ -1,9 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "enabledManagers": [
-    "dockerfile",
-    "custom.regex"
-  ],
+  "enabledManagers": ["dockerfile"],
   "extends": [
     "config:best-practices",
     ":semanticCommits"
@@ -53,19 +50,12 @@
       "semanticCommitType": "feat",
       "commitMessagePrefix": "feat(base image)!:",
       "commitMessageExtra": "BREAKING CHANGE: Major version upgrade of the base image."
-    },
-    {
-      "description": "Set Java updates to trigger patch releases",
-      "matchDatasources": [
-        "repology"
-      ],
-      "semanticCommitType": "fix"
     }
   ],
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^Dockerfile$"],
+      "managerFilePatterns": ["/^Dockerfile$/"],
       "matchStrings": [
         "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sENV .*?_VERSION=\"(?<currentValue>.*)\"\\s"
       ],
