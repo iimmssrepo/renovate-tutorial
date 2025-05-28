@@ -11,7 +11,7 @@ ENV AWS_VERSION="2.19.5"
 ENV COMPOSER_VERSION="2.8.2"
 ENV NC_VERSION="1.10-47"
 # renovate: datasource=repology depName=debian_12/postgresql-15 versioning=loose
-ENV PSQL_CLIENT_VERSION="15+248"
+ENV PSQL_CLIENT_VERSION="15.13-0+deb12u1"
 # renovate: datasource=repology depName=debian_12/curl versioning=loose
 ENV CURL_VERSION="7.88.1-10+deb12u8"
 # renovate: datasource=repology depName=debian_12/zip versioning=loose
