@@ -18,7 +18,7 @@ ENV ZIP_VERSION="3.0-13"
 # renovate: datasource=repology depName=debian_12/unzip versioning=loose
 ENV UNZIP_VERSION="6.0-28"
 # renovate: datasource=repology depName=debian_12/python3.11 versioning=loose
-ENV PYTHON_VERSION="3.11.2-1+b1"
+ENV PYTHON_VERSION="3.11.2-6+deb12u6"
 
 # use root user to install packages
 USER root
