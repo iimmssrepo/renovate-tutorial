@@ -4,6 +4,7 @@ FROM jenkins/inbound-agent:3309.v27b_9314fd1a_4-3@sha256:193c6ca7ea13b8ab05635e0
 # renovate: datasource=repology depName=debian_12/jq versioning=loose
 ENV JQ_VERSION="1.6-2.1"
 ENV SONAR_VERSION="6.2.1.4610"
+# renovate: datasource=repology depName=debian_12/nodejs versioning=loose
 ENV NODEJS_VERSION="20.18.0-1nodesource1"
 ENV NG_VERSION="12.2.15"
 ENV AWS_VERSION="2.19.5"
