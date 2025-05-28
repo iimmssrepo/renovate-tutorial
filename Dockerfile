@@ -1,23 +1,24 @@
-FROM jenkins/inbound-agent:3309.v27b_9314fd1a_4-3-jdk21
+FROM jenkins/inbound-agent:3283.v92c105e0f819-1
 
 # systems versions
+# renovate: datasource=repology depName=debian_12/jq versioning=loose
+ENV JQ_VERSION="1.6-2.1"
+ENV SONAR_VERSION="6.2.1.4610"
+ENV NODEJS_VERSION="20.18.0-1nodesource1"
+ENV NG_VERSION="12.2.15"
+ENV AWS_VERSION="2.19.5"
+ENV COMPOSER_VERSION="2.8.2"
+ENV NC_VERSION="1.10-47"
+# renovate: datasource=repology depName=debian_12/postgresql-15 versioning=loose
+ENV PSQL_CLIENT_VERSION="15+248"
 # renovate: datasource=repology depName=debian_12/curl versioning=loose
-ENV CURL_VERSION="7.88.1-10+deb12u12"
+ENV CURL_VERSION="7.88.1-10+deb12u8"
 # renovate: datasource=repology depName=debian_12/zip versioning=loose
 ENV ZIP_VERSION="3.0-13"
 # renovate: datasource=repology depName=debian_12/unzip versioning=loose
 ENV UNZIP_VERSION="6.0-28"
-# renovate: datasource=repology depName=debian_12/jq versioning=loose
-ENV JQ_VERSION="1.6-2.1"
 # renovate: datasource=repology depName=debian_12/python3.11 versioning=loose
 ENV PYTHON_VERSION="3.11.2-1+b1"
-# renovate: datasource=repology depName=debian_12/nodejs versioning=loose
-ENV NODEJS_VERSION="20.19.2-1nodesource1"
-ENV NC_VERSION="1.10-47"
-ENV PSQL_CLIENT_VERSION="15+248"
-ENV SONAR_VERSION="6.2.1.4610"
-ENV NG_VERSION="12.2.15"
-ENV COMPOSER_VERSION="2.8.2"
 
 # use root user to install packages
 USER root
@@ -25,7 +26,7 @@ RUN \
   apt-get update -y && \
   apt-get install -y --no-install-recommends \
       curl=${CURL_VERSION} \
-	  zip=${ZIP_VERSION} \
+      zip=${ZIP_VERSION} \
       unzip=${UNZIP_VERSION} \
       jq=${JQ_VERSION} \
       python3=${PYTHON_VERSION} \
@@ -56,7 +57,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	php-cli=2:8.2+93 \
 	php-mbstring=2:8.2+93 \
 	build-essential=12.9 \
-	sshpass=1.09-1 \
+	sshpass=1.09-1+b1 \
 	libglu1-mesa=9.0.2-1.1 \
 	libxi6=2:1.8-1+b1 \
 	netcat-traditional=${NC_VERSION} \
