@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "enabledManagers": ["dockerfile"],
+  "enabledManagers": ["dockerfile", "custom.regex"],
   "extends": [
     "config:best-practices",
     ":semanticCommits"
@@ -50,14 +50,20 @@
       "semanticCommitType": "feat",
       "commitMessagePrefix": "feat(base image)!:",
       "commitMessageExtra": "BREAKING CHANGE: Major version upgrade of the base image."
+    },
+    {
+      "description": "remoting agent uses non-standard versioning",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["jenkins/inbound-agent"],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>[^\\.-]*)(\\.(?<patch>\\d+))?(-(?<build>\\d+))?$"
     }
   ],
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["/^Dockerfile$/"],
+      "fileMatch": ["^Dockerfile$"],
       "matchStrings": [
-        "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sENV .*?_VERSION=\"(?<currentValue>.*)\"\\s"
+        "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sENV .*?_VER=\"(?<currentValue>.*)\"\\s"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
