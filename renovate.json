@@ -1,6 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "enabledManagers": ["dockerfile", "custom.regex"],
+  "enabledManagers": [
+    "dockerfile",
+    "custom.regex"
+  ],
   "extends": [
     "config:best-practices",
     ":semanticCommits"
@@ -59,7 +62,9 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^Dockerfile$"],
+      "managerFilePatterns": [
+        "/^Dockerfile$/"
+      ],
       "matchStrings": [
         "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sARG .*?_VER=\"(?<currentValue>.*)\"\\s"
       ],
@@ -67,4 +72,3 @@
     }
   ]
 }
-  
