@@ -1,9 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "enabledManagers": [
-    "dockerfile",
-    "custom.regex"
-  ],
+  "enabledManagers": ["dockerfile", "custom.regex"],
   "extends": [
     "config:best-practices",
     ":semanticCommits"
@@ -26,11 +23,10 @@
         "docker"
       ],
       "matchUpdateTypes": [
-        "patch"
+        "patch",
+        "digest"
       ],
-      "semanticCommitType": "fix",
-      "commitMessagePrefix": "fix(deps): ",
-      "commitMessageExtra": "patch upgrade"
+      "semanticCommitType": "fix"
     },
     {
       "matchDatasources": [
@@ -39,9 +35,7 @@
       "matchUpdateTypes": [
         "minor"
       ],
-      "semanticCommitType": "feat",
-      "commitMessagePrefix": "feat(deps): ",
-      "commitMessageExtra": "minor upgrade"
+      "semanticCommitType": "feat"
     },
     {
       "matchDatasources": [
@@ -52,29 +46,30 @@
       ],
       "semanticCommitType": "feat",
       "commitMessagePrefix": "feat(base image)!:",
-      "commitMessageExtra": "BREAKING CHANGE: Major version upgrade of the base image."
+      "commitMessageExtra": "BREAKING CHANGE: Major version upgrade of the base image to {{newVersion}}"
     },
     {
-      "description": "remoting agent uses non-standard versioning",
+      "description": "Set Java updates to trigger patch releases",
       "matchDatasources": [
-        "docker"
+        "repology"
       ],
-      "matchPackageNames": [
-        "jenkins/inbound-agent"
-      ],
-      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>[^\\.-]*)(\\.(?<patch>\\d+))?(-(?<build>\\d+))?$"
+      "semanticCommitType": "fix"
     }
   ],
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": [
-        "/^Dockerfile$/"
-      ],
+      "fileMatch": ["^Dockerfile$"],
       "matchStrings": [
-        "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sENV .*?_VERSION=\"(?<currentValue>.*)\"\\s"
+        "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sARG .*?_VER=\"(?<currentValue>.*)\"\\s"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
-  ]
+  ],
+  "postUpgradeTasks": {
+    "commands": [
+      "./renovate-post-upgrade-tasks.sh"
+    ]
+  }
 }
+  
