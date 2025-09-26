@@ -2,7 +2,7 @@
 ARG UBUNTU_VERSION=25.10
 
 # Use the specified version with the correct SHA256 digest
-FROM ubuntu:${UBUNTU_VERSION}@sha256:36bbb8adc0662496d3e314bc8a25cb41c0c2e42ed25daaa07f8369d36d16f082 AS production
+FROM ubuntu:${UBUNTU_VERSION}@sha256:a61c057b4f69200ecf031519a20db79b8683837ba1dc2a59458d333eb75b174d AS production
 
 # labels
 LABEL mantainer="Iñigo Montesino Vilches"
